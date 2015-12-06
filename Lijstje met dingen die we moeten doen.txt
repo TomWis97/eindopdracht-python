@@ -19,3 +19,9 @@ Eisen:
   - Management script moet informatie van de agents in een CSV file zetten.
     - datum/tijd, agent, count, waarde
   - Configuratie van scripts komt uit een config file.
+
+Wensen:
+  - Database voor historie van meetwaarden.
+  - Github
+  - XML configuratie
+  - Grafiekjes
