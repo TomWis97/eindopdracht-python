@@ -1,6 +1,10 @@
-Linux en windows systemen
+- Linux en Windows systemen.
+- UML diagram
 
-Github
+Optionele dingen:
+- Database voor historie van meetwaarden.
+- Github
+- XML configuratie
+- Grafiekjes
 
-UML - diagram
 
