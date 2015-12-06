@@ -1,0 +1,21 @@
+Op te vragen gegevens:
+  - Temperatuur
+  - Hoeveelheid RAM
+  - Aantal services
+  - Hoeveelheid vrije schijfruimte op een partitie
+  - Aantal gebruikers dat is aangelogd.
+
+Eisen:
+  - CGI met webserver
+  - INSTALL.txt file met installatie-instructies.
+  - Met PowerShell dingen opvragen:
+    - Beschikbaar geheugen
+    - Eerste beschikbare IP adres
+    - Vrije HDD ruimte op C-partitie
+    - Uptime van het systeem in dagen
+  - Resultaat presenteren op een bruikbare en overzichtelijke manier.
+  - Bruikbare logging in scripts
+  - Goede foutafhandeling
+  - Management script moet informatie van de agents in een CSV file zetten.
+    - datum/tijd, agent, count, waarde
+  - Configuratie van scripts komt uit een config file.
