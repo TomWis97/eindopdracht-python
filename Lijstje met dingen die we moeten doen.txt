@@ -4,15 +4,15 @@ Op te vragen gegevens:
   - Aantal services
   - Hoeveelheid vrije schijfruimte op een partitie
   - Aantal gebruikers dat is aangelogd.
+  - Beschikbaar geheugen
+  - Eerste beschikbare IP adres
+  - Vrije HDD ruimte op C-partitie
+  - Uptime van het systeem in dagen
 
 Eisen:
   - CGI met webserver
   - INSTALL.txt file met installatie-instructies.
-  - Met PowerShell dingen opvragen:
-    - Beschikbaar geheugen
-    - Eerste beschikbare IP adres
-    - Vrije HDD ruimte op C-partitie
-    - Uptime van het systeem in dagen
+  - Met PowerShell dingen opvragen op Windows.
   - Resultaat presenteren op een bruikbare en overzichtelijke manier.
   - Bruikbare logging in scripts
   - Goede foutafhandeling
