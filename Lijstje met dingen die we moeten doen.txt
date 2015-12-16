@@ -2,6 +2,7 @@ Op te vragen gegevens:
   - Temperatuur
   - Hoeveelheid RAM
   - Aantal services
+  Met PowerShell:
   - Hoeveelheid vrije schijfruimte op een partitie
   - Aantal gebruikers dat is aangelogd.
   - Beschikbaar geheugen
