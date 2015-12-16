@@ -1,0 +1,12 @@
+--- Mick ---
+- Gegevens opvragen
+
+
+--- Tom ---
+- VM's op laptop
+- HTML bakken
+- Install.txt schrijven
+- Presentatie van dingen.
+- Dingen aan elkaar knopen met duct tape.
+- CSV
+- de rest enzo
