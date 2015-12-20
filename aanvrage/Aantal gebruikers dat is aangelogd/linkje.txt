@@ -1,0 +1,1 @@
+http://stackoverflow.com/questions/14319023/find-out-who-is-logged-in-on-linux-using-python
