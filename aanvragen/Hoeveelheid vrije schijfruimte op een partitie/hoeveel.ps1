@@ -1,2 +1,8 @@
-gwmi win32_logicaldisk -filter "drivetype = 3"
-pause
+﻿$disk = Get-WmiObject Win32_LogicalDisk |
+Select-Object Size,FreeSpace,DeviceID
+
+$disk.DeviceID
+$disk.Size
+$disk.FreeSpace
+
+Pause

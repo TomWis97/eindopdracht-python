@@ -1,0 +1,1 @@
+﻿Get-WmiObject win32_OperatingSystem |%{"Total Physical Memory: {0}KB" -f $_.totalvisiblememorysize}

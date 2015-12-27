@@ -1,0 +1,1 @@
+﻿Get-WmiObject win32_OperatingSystem |%{"Total Virtual Memory : : {0}KB" -f $_.totalvirtualmemorysize}
