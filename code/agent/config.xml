@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<agentconfig>
+  <logging>
+    <file>log (agent).txt</file>
+    <level>DEBUG</level>
+    <format>%(asctime)-24s: %(levelname)-10s - %(message)s</format>
+  </logging>
+  <actions>
+    <allow_reboot>True</allow_reboot>
+  </actions>
+</agentconfig>

@@ -1,0 +1,80 @@
+#!/usr/bin/env python3
+from lxml import etree
+import logging
+import traceback
+import getdata
+logger = logging.getLogger('mainlogger')
+
+def process_request_oud(file):
+    antwoord = "Hier heb je je eerste teken terug: " + file[0]
+    logger.debug("Antwoord '%s'" % antwoord)
+    return antwoord
+
+def process_request(file):
+    """Verwerkt de requests. Het argument is de string (dus decoded) XML file welke over de TCP verbinding is verstuurd. Het geeft een XML met daarin de waardes terug"""
+    logger.debug("Process_request gaat gaat de volgende XML verwerken: %s" % file)
+    inputxml = bytes(file, 'UTF-8')
+    try:
+        request_xml = etree.fromstring(inputxml)
+        objects = request_xml.xpath("//request/data/object/@id")
+        actions = request_xml.xpath("//request/data/action/@id")
+
+        for object in objects:
+            processing_object = request_xml.xpath('//request/data/object[@id="%s"]' % object)
+            logger.debug("Processing_request: Verwerkt object %s." % object[0])
+            print("Object:", object)
+            if object == "temperature":
+                processing_object[0].text = str(getdata.temperature())
+                print("temperature", object, processing_object)
+            elif object == "ram_total":
+                processing_object[0].text = str(getdata.ram_total())
+            elif object == "ram_free":
+                processing_object[0].text = str(getdata.ram_free())
+            elif object == "no_services":
+                processing_object[0].text = str(getdata.no_services())
+            elif object == "diskinfo":
+                disks = getdata.diskinfo()
+                for disk in disks:
+                    disk_element = etree.SubElement(processing_object[0], 'disk', id=disk['drive'])
+                    disk_element_free = etree.SubElement(disk_element, 'free')
+                    disk_element_free.text = disk['free']
+                    disk_element_total = etree.SubElement(disk_element, 'total')
+                    disk_element_total.text = disk['total']
+            elif object == "no_users":
+                processing_object[0].text = str(getdata.no_users())
+            elif object == "ips":
+                alleips = getdata.ips()
+                for ipaddr in alleips:
+                    ip_element = etree.SubElement(processing_object[0], 'ip')
+                    ip_element.text = ipaddr
+            elif object == "uptime":
+                processing_object[0].text = str(getdata.uptime())
+            elif object == "cpu_load":
+                processing_object[0].text = str(getdata.cpu_load())
+        return etree.tostring(request_xml, pretty_print=True).decode('UTF-8')
+    except:
+        logger.critical("Er ging iets fout tijdens het verwerken van de input:" + traceback.format_exc())
+
+
+# test_xml = """<?xml version='1.0' encoding='UTF-8'?>
+# <request>
+#   <info>
+#     <version type="server">0.1</version>
+#     <version type="agent"/>
+#   </info>
+#   <actions>
+#     <action id="reboot"/>
+#   </actions>
+#   <data>
+#     <object id="temperature"/>
+#     <object id="ram_total"/>
+#     <object id="ram_free"/>
+#     <object id="no_services"/>
+#     <object id="diskinfo"/>
+#     <object id="no_users"/>
+#     <object id="ips"/>
+#     <object id="uptime"/>
+#     <object id="cpu_load"/>
+#   </data>
+# </request>"""
+# print(process_request(test_xml))
