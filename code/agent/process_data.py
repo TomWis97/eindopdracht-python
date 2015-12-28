@@ -2,7 +2,7 @@
 from lxml import etree
 import logging
 import traceback
-import getdata
+import get_data
 logger = logging.getLogger('mainlogger')
 
 def process_request_oud(file):
@@ -21,19 +21,17 @@ def process_request(file):
 
         for object in objects:
             processing_object = request_xml.xpath('//request/data/object[@id="%s"]' % object)
-            logger.debug("Processing_request: Verwerkt object %s." % object[0])
-            print("Object:", object)
+            logger.debug("Processing_request: Verwerkt object %s." % object)
             if object == "temperature":
-                processing_object[0].text = str(getdata.temperature())
-                print("temperature", object, processing_object)
+                processing_object[0].text = str(get_data.temperature())
             elif object == "ram_total":
-                processing_object[0].text = str(getdata.ram_total())
+                processing_object[0].text = str(get_data.ram_total())
             elif object == "ram_free":
-                processing_object[0].text = str(getdata.ram_free())
+                processing_object[0].text = str(get_data.ram_free())
             elif object == "no_services":
-                processing_object[0].text = str(getdata.no_services())
+                processing_object[0].text = str(get_data.no_services())
             elif object == "diskinfo":
-                disks = getdata.diskinfo()
+                disks = get_data.diskinfo()
                 for disk in disks:
                     disk_element = etree.SubElement(processing_object[0], 'disk', id=disk['drive'])
                     disk_element_free = etree.SubElement(disk_element, 'free')
@@ -41,18 +39,18 @@ def process_request(file):
                     disk_element_total = etree.SubElement(disk_element, 'total')
                     disk_element_total.text = disk['total']
             elif object == "no_users":
-                processing_object[0].text = str(getdata.no_users())
+                processing_object[0].text = str(get_data.no_users())
             elif object == "ips":
-                alleips = getdata.ips()
+                alleips = get_data.ips()
                 for ipaddr in alleips:
                     ip_element = etree.SubElement(processing_object[0], 'ip')
                     ip_element.text = ipaddr
             elif object == "uptime":
-                processing_object[0].text = str(getdata.uptime())
+                processing_object[0].text = str(get_data.uptime())
             elif object == "cpu_load":
-                processing_object[0].text = str(getdata.cpu_load())
+                processing_object[0].text = str(get_data.cpu_load())
             elif object == "no_processes":
-                processing_object[0].text = str(getdata.no_processes)
+                processing_object[0].text = str(get_data.no_processes())
         return etree.tostring(request_xml, pretty_print=True).decode('UTF-8')
     except:
         logger.critical("Er ging iets fout tijdens het verwerken van de input:" + traceback.format_exc())

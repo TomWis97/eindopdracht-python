@@ -62,4 +62,4 @@ def no_processes():
     """Geef het aantal processen op het systeem."""
     processen = random.randint(50,200)
     logger.debug("no_processes = %s" % processen)
-    return no_processes
+    return processen
