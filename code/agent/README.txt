@@ -1,1 +1,2 @@
-De code die hier in staat is nog niet helemaal getest. Maar hopelijk blijft alles grotendeels hetzelfde. Het servergedeelte moet eerst werkend worden gemaakt voordat er getest kan worden.
+De agent lijkt nu goed te werken. Als er nog items die gemeten worden ontbreken, laat 
+het even weten pl0x.
