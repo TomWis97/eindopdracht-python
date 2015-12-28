@@ -51,6 +51,8 @@ def process_request(file):
                 processing_object[0].text = str(getdata.uptime())
             elif object == "cpu_load":
                 processing_object[0].text = str(getdata.cpu_load())
+            elif object == "no_processes":
+                processing_object[0].text = str(getdata.no_processes)
         return etree.tostring(request_xml, pretty_print=True).decode('UTF-8')
     except:
         logger.critical("Er ging iets fout tijdens het verwerken van de input:" + traceback.format_exc())
