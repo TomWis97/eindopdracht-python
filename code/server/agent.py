@@ -17,15 +17,38 @@ class agent:
         # Bij het aanmaken van de class wordt alleen het IP adres van de agent ingesteld. Voor het opvragen van de informatie moet een functie worden aangeroepen. Dit voorkomt dat het aanmaken van de class veel tijd in beslag neemt. (Dit is best een lange comment.)
         self.ip = ip
 
-    def requestinfo(self):
+    def request_info(self):
         """Vraag informatie op van de agent. Voor het uitvoeren van actions ben je op zoek naar execute_action()."""
         logger.info("Ik vraag dingen op van %s" % self.ip)
-        request_xml = self.__buildxml(self.object_ids, [])
-        print("Request: ", request_xml)
-        reply_xml = self.__connect_agent(request_xml)
-        # Voorlopig wordt de output even in de terminal gedumpt. Even om te testen, want later moet het in een dictionary komen.
-        print("---- REPLY! ----", reply_xml)
-        return "Finished"
+        request_xml = self.__buildxml(self.object_ids, []) # Bouw de XML van de request met de object ids zonder actions.
+        logger.debug("Request XML: %s" % request_xml)
+        reply_xml = self.__connect_agent(request_xml) # Maak verbinding met de agent en verstuur de request XML. Zet het antwoord als reply.
+        logger.debug("Reply XML: %s" % reply_xml)
+        reply_xml_object = etree.fromstring(reply_xml) # Maak een object waar we dingen mee kunnen doen met lxml.
+        data_dict = {} # Variabele waar alle waardes in komen aanmaken.
+        objects = reply_xml_object.xpath("//request/data/object") # Maak een lxml object van alle objecten in de XML.
+        for object in objects: # Met dit object kunnen we een for loop maken.
+            if object.attrib['id'] == "diskinfo":
+                all_disks = []
+                try:
+                    for disk in object:
+                        this_disk = {}
+                        this_disk['free'] = disk.find("free").text
+                        this_disk['total'] = disk.find("total").text
+                        this_disk['id'] = disk.attrib['id']
+                        all_disks.append(this_disk)
+                except:
+                    logger.warning("Er ging iets fout bij het uitlezen van de informatie van de disks: %s" % traceback.format_exc())
+                    all_disks = None
+                data_dict['diskinfo'] = all_disks # Het diskinfo element is dus een lijst met dictionaries met daarin de informatie.
+            elif object.attrib['id'] == "ips":
+                ips = []
+                for ip in object:
+                    ips.append(ip.text)
+                data_dict['ips'] = ips # Het ips element is een lijst met alle IPs als een string.
+            else:
+                data_dict[object.attrib['id']] = object.text # Alle andere obnjecten hebben geen speciale behandeling nodig. Die kunnen dus gewoon worden toegevoegd aan de ditctionary.
+        self.data = data_dict
 
     def __connect_agent(self, content):
         """Maak verbinding met een agent en stuur de content via TCP."""
@@ -57,7 +80,27 @@ class agent:
         xmlding = etree.tostring(root, encoding='UTF-8', xml_declaration=True, pretty_print=True).decode('UTF-8')
         return xmlding
 
+    def execute_action(self, actions_todo):
+        """Voer een of meerdere actions uit op de agent. Het verwacht de uit te voeren actions als een lijst."""
+        for arg in args:
+            print(arg)
+        logger.info("Ik voer de volgende actions uit op %s: %s" % self.ip, list_actions)
+        # Als je goed kijkt, dan zie je dat ik code van request_info() heb gerecycled. \o/
+        request_xml = self.__buildxml([], actions_todo) # Bouw de XML van de request zonder objecten maar met actions
+        logger.debug("Request XML: %s" % request_xml)
+        reply_xml = self.__connect_agent(request_xml) # Maak verbinding met de agent en verstuur de request XML. Zet het antwoord als reply.
+        logger.debug("Reply XML: %s" % reply_xml)
+        reply_xml_object = etree.fromstring(reply_xml) # Maak een object waar we dingen mee kunnen doen met lxml.
+        actions_result = {} # Variabele waar alle waardes in komen aanmaken.
+        actions = reply_xml_object.xpath("//request/data/actions") # Maak een lxml object van alle objecten in de XML.
+        for action in actions: # Met dit object kunnen we een for loop maken.
+            actions_dict[action.attrib['id']] = action.text # Alle andere obnjecten hebben geen speciale behandeling nodig. Die kunnen dus gewoon worden toegevoegd aan de ditctionary.
+        self.actions_result = actions_result
 
-ding = agent('127.0.0.1')
-ding.requestinfo()
-print(ding.ip)
+# Voorbeeldje van gebruik van deze class:
+ding = agent('172.16.2.30')
+ding.execute_action("ding1", "reboot")
+# ding.request_info()
+# print(ding.data)
+#
+# Uitvoeren van actions:
