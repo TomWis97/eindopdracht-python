@@ -82,14 +82,13 @@ class agent:
 
     def execute_action(self, actions_todo):
         """Voer een of meerdere actions uit op de agent. Het verwacht de uit te voeren actions als een lijst."""
-        for arg in args:
-            print(arg)
-        logger.info("Ik voer de volgende actions uit op %s: %s" % self.ip, list_actions)
+        logger.info("Ik voer de volgende actions uit op %s: %s" % (self.ip, actions_todo))
         # Als je goed kijkt, dan zie je dat ik code van request_info() heb gerecycled. \o/
         request_xml = self.__buildxml([], actions_todo) # Bouw de XML van de request zonder objecten maar met actions
         logger.debug("Request XML: %s" % request_xml)
         reply_xml = self.__connect_agent(request_xml) # Maak verbinding met de agent en verstuur de request XML. Zet het antwoord als reply.
         logger.debug("Reply XML: %s" % reply_xml)
+        print(reply_xml)
         reply_xml_object = etree.fromstring(reply_xml) # Maak een object waar we dingen mee kunnen doen met lxml.
         actions_result = {} # Variabele waar alle waardes in komen aanmaken.
         actions = reply_xml_object.xpath("//request/data/actions") # Maak een lxml object van alle objecten in de XML.
@@ -98,8 +97,8 @@ class agent:
         self.actions_result = actions_result
 
 # Voorbeeldje van gebruik van deze class:
-ding = agent('172.16.2.30')
-ding.execute_action("ding1", "reboot")
+# ding = agent('172.16.2.30')
+# ding.execute_action("ding1", "reboot")
 # ding.request_info()
 # print(ding.data)
 #
