@@ -3,7 +3,7 @@ from lxml import etree
 import logging
 import traceback
 import get_data
-import actions
+import process_actions
 logger = logging.getLogger('mainlogger')
 
 def process_request_oud(file):
@@ -53,10 +53,7 @@ def process_request(file):
             elif object == "no_processes":
                 processing_object[0].text = str(get_data.no_processes())
         for action in actions:
-            print("action:", action.attrib['id'])
-            result = actions.execute_action(action)
-            print(result)
-            action.text = result
+            action.text = process_actions.execute_action(action.attrib['id'])
         return etree.tostring(request_xml, pretty_print=True).decode('UTF-8')
     except:
         logger.critical("Er ging iets fout tijdens het verwerken van de input:" + traceback.format_exc())

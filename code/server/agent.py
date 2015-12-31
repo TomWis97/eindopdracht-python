@@ -88,13 +88,12 @@ class agent:
         logger.debug("Request XML: %s" % request_xml)
         reply_xml = self.__connect_agent(request_xml) # Maak verbinding met de agent en verstuur de request XML. Zet het antwoord als reply.
         logger.debug("Reply XML: %s" % reply_xml)
-        print(reply_xml)
         reply_xml_object = etree.fromstring(reply_xml) # Maak een object waar we dingen mee kunnen doen met lxml.
         actions_result = {} # Variabele waar alle waardes in komen aanmaken.
-        actions = reply_xml_object.xpath("//request/data/actions") # Maak een lxml object van alle objecten in de XML.
+        actions = reply_xml_object.xpath("//request/actions/action") # Maak een lxml object van alle objecten in de XML.
         for action in actions: # Met dit object kunnen we een for loop maken.
-            actions_dict[action.attrib['id']] = action.text # Alle andere obnjecten hebben geen speciale behandeling nodig. Die kunnen dus gewoon worden toegevoegd aan de ditctionary.
-        self.actions_result = actions_result
+            actions_result[action.attrib['id']] = action.text # Alle andere obnjecten hebben geen speciale behandeling nodig. Die kunnen dus gewoon worden toegevoegd aan de ditctionary.
+        self.actions_result = actions_result # Sla het resultaat van de actions op in een dictionary in het object.
 
 # Voorbeeldje van gebruik van deze class:
 # ding = agent('172.16.2.30')
