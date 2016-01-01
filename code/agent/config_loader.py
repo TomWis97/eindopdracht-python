@@ -31,4 +31,4 @@ except:
 
 def getcfg(setting):
     """Via deze functie kan een instelling worden opgevraagd."""
-    return __cfg.get(setting)
+    return __cfg.get(setting) # Verwijst naar het __cfg lxml object. Verkrijgt de tekst.
