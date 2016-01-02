@@ -17,6 +17,8 @@ def process_request(file):
     inputxml = bytes(file, 'UTF-8')
     try:
         request_xml = etree.fromstring(inputxml)
+        # Insert version.
+        request_xml.xpath("//request/info/version[@type='agent']")[0].text = "1.0"
         objects = request_xml.xpath("//request/data/object/@id")
         actions = request_xml.xpath("//request/actions/action")
         # De code hieronder kan misschien geoptimaliseerd worden. Nu wordt er steeds een nieuw object aangemaakt. Ik denk dat dit beter kan.
