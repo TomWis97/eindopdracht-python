@@ -2,11 +2,19 @@
 from lxml import etree
 import logging
 import traceback
-import get_data
+# import get_data
 import process_actions
 import config_loader
 import socket
 import sys
+if sys.platform.startswith('linux'):
+    import get_data_linux as get_data
+elif sys.platform == 'win32':
+    import get_data_windows as get_data
+else:
+    print("Unsupported platform!")
+    exit(1)
+
 logger = logging.getLogger('mainlogger')
 
 def process_request_oud(file):
