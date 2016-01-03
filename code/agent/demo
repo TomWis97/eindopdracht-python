@@ -1,0 +1,4 @@
+#!/bin/bash
+echo "Dit is output."
+>&2 echo "Dit is een error."
+exit 1
