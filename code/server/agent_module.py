@@ -46,9 +46,8 @@ class agent:
         request_xml = self.__buildxml(self.object_ids, []) # Bouw de XML van de request met de object ids zonder actions.
         logger.debug("Request XML: %s" % request_xml)
         reply_xml = self.__connect_agent(request_xml) # Maak verbinding met de agent en verstuur de request XML. Zet het antwoord als reply.
-        print(reply_xml)
         logger.debug("Reply XML: %s" % reply_xml)
-        reply_xml_object = etree.fromstring(reply_xml) # Maak een object waar we dingen mee kunnen doen met lxml.
+        reply_xml_object = etree.fromstring(bytes(reply_xml, 'UTF-8')) # Maak een object waar we dingen mee kunnen doen met lxml.
         data_dict = {} # Variabele waar alle waardes in komen aanmaken.
         objects = reply_xml_object.xpath("//request/data/object") # Maak een lxml object van alle objecten in de XML.
         for object in objects: # Met dit object kunnen we een for loop maken.
@@ -113,7 +112,7 @@ class agent:
         logger.debug("Request XML: %s" % request_xml)
         reply_xml = self.__connect_agent(request_xml) # Maak verbinding met de agent en verstuur de request XML. Zet het antwoord als reply.
         logger.debug("Reply XML: %s" % reply_xml)
-        reply_xml_object = etree.fromstring(reply_xml) # Maak een object waar we dingen mee kunnen doen met lxml.
+        reply_xml_object = etree.fromstring(bytes(reply_xml, 'UTF-8')) # Maak een object waar we dingen mee kunnen doen met lxml.
         actions_result = {} # Variabele waar alle waardes in komen aanmaken.
         actions = reply_xml_object.xpath("//request/actions/action") # Maak een lxml object van alle objecten in de XML.
         for action in actions: # Met dit object kunnen we een for loop maken.
