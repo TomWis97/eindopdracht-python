@@ -1,7 +1,7 @@
 ﻿function temperature
 {
     $a = get-wmiobject MSAcpi_ThermalZoneTemperature -namespace "root/wmi" `
-        | select CurrentTemperature,InstanceName
+        | select CurrentTemperature,InstanceName | Select-Object -First 1
     ($a.CurrentTemperature/10 - 273.15) * 1.8 + 32
 }
 
