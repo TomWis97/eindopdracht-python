@@ -5,6 +5,7 @@ import traceback
 import get_data
 import process_actions
 import config_loader
+import socket
 import sys
 logger = logging.getLogger('mainlogger')
 
@@ -63,6 +64,7 @@ def process_request(file):
         elif request_xml.tag == 'discover':
             request_xml.xpath("//discover/version[@type='agent']")[0].text = config_loader.cfg['agent_version']
             request_xml.xpath("//discover/os")[0].text = sys.platform
+            request_xml.xpath("//discover/hostname")[0].text = socket.gethostname()
             for custom_action in config_loader.cfg['actions']['custom_actions']['names_list']:
                 request_xml_custom_action = etree.SubElement(request_xml.xpath('//discover/custom_actions')[0], 'action', name=custom_action)
                 #request_xml_custom_action = request_xml.xpath('//discover/custom_actions').append(etree.Element('action', name=custom_action))

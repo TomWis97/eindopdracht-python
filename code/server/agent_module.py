@@ -26,12 +26,14 @@ class agent:
         server_version.text = "0.1"
         root.append(etree.Element('version', type='agent'))
         root.append(etree.Element('os'))
+        root.append(etree.Element('hostname'))
         root.append(etree.Element('custom_actions'))
         discovery_request_xml = etree.tostring(root, encoding='UTF-8', xml_declaration=True, pretty_print=True).decode('UTF-8')
         discovery_reply_xml_file = self.__connect_agent(discovery_request_xml)
         discovery_reply_xml = etree.fromstring(bytes(discovery_reply_xml_file, 'UTF-8'))
         info_dict['version'] = discovery_reply_xml.xpath('//discover/version[@type="agent"]')[0].text
         info_dict['os'] = discovery_reply_xml.xpath('//discover/os')[0].text
+        info_dict['hostname'] = discovery_reply_xml.xpath('//discover/hostname')[0].text
         info_dict['custom_actions'] = {}
         info_dict['custom_actions']['names_list'] = []
         info_dict['custom_actions']['descriptions'] = {}
