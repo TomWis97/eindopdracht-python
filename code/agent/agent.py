@@ -7,7 +7,8 @@ import config_loader
 import process_data
 
 # Logging instellingen instellen enzo.
-logging.basicConfig(filename=config_loader.getcfg('log_file'), level=config_loader.getcfg('log_level'), format=config_loader.getcfg('log_format'))
+#logging.basicConfig(filename=config_loader.getcfg('log_file'), level=config_loader.getcfg('log_level'), format=config_loader.getcfg('log_format'))
+logging.basicConfig(filename=config_loader.cfg['log_file'], level=config_loader.cfg['log_level'], format=config_loader.cfg['log_format'])
 logger = logging.getLogger('mainlogger')
 
 if config_loader.load_error:
@@ -18,6 +19,7 @@ logger.info("Script is gestart.")
 
 try:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Maak een socket object aan.
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.bind(('', 4568)) # Knoop het socket aan alle interfaces en aan poort 4568.
     s.listen(1) # Laat het socket luisteren naar binnenkomende verbindingen. De 1 geeft aan hoeveel vervindingen er in de wachtrij mogen staan.
     while True:
@@ -28,7 +30,6 @@ try:
             logger.debug("Inkomende data is %s bytes lang." % datalen)
             file = conn.recv(datalen).decode('UTF-8') # Ontvang het bestand en maak van de bytes een string van (met UTF-8 encoding).
             logger.debug("Ontvangen data: " + file)
-            # Update deze verwijzing als xml processing af is.
             answer = process_data.process_request(file) # Stuur de XMl van de request door naar de functie die het verder verwerkt.
             binanswer = bytes(answer, 'UTF-8') # Maak van het antwoord weer een berg bytes. Het antwoord is UTF-8 encoded.
             conn.send(struct.pack('!I', len(binanswer))) # Verstuur de lengte van het antwoord.
@@ -37,6 +38,7 @@ try:
             logger.info("Verbinding met %s gesloten." % addr[0])
         except KeyboardInterrupt:
             logger.info("KeyboardInterrupt opgevangen. Script wordt gestopt.") # Op het moment dat het script draait en er CTRL+C gedaan wordt, moet het script stoppen.
+            s.close()
             exit()
         except:
             logger.error(traceback.format_exc())

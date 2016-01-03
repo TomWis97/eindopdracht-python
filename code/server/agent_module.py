@@ -17,12 +17,36 @@ class agent:
         # Bij het aanmaken van de class wordt alleen het IP adres van de agent ingesteld. Voor het opvragen van de informatie moet een functie worden aangeroepen. Dit voorkomt dat het aanmaken van de class veel tijd in beslag neemt. (Dit is best een lange comment.)
         self.ip = ip
 
+    def discover(self):
+        """Discover de agent. Kijk welke custom acties er bekend zijn bij de agent, welk OS, en welke agent versie."""
+        info_dict = {}
+        root = etree.Element('discover')
+        #TODO Versie uit configuratie halen.
+        server_version = etree.SubElement(root, 'version', type='server')
+        server_version.text = "0.1"
+        root.append(etree.Element('version', type='agent'))
+        root.append(etree.Element('os'))
+        root.append(etree.Element('custom_actions'))
+        discovery_request_xml = etree.tostring(root, encoding='UTF-8', xml_declaration=True, pretty_print=True).decode('UTF-8')
+        discovery_reply_xml_file = self.__connect_agent(discovery_request_xml)
+        discovery_reply_xml = etree.fromstring(bytes(discovery_reply_xml_file, 'UTF-8'))
+        info_dict['version'] = discovery_reply_xml.xpath('//discover/version[@type="agent"]')[0].text
+        info_dict['os'] = discovery_reply_xml.xpath('//discover/os')[0].text
+        info_dict['custom_actions'] = {}
+        info_dict['custom_actions']['names_list'] = []
+        info_dict['custom_actions']['descriptions'] = {}
+        for custom_action in discovery_reply_xml.xpath('//discover/custom_actions')[0]:
+            info_dict['custom_actions']['names_list'].append(custom_action.get('name'))
+            info_dict['custom_actions']['descriptions'][custom_action.attrib['name']] = custom_action.find('description').text
+        return info_dict
+
     def request_info(self):
         """Vraag informatie op van de agent. Voor het uitvoeren van actions ben je op zoek naar execute_action()."""
         logger.info("Ik vraag dingen op van %s" % self.ip)
         request_xml = self.__buildxml(self.object_ids, []) # Bouw de XML van de request met de object ids zonder actions.
         logger.debug("Request XML: %s" % request_xml)
         reply_xml = self.__connect_agent(request_xml) # Maak verbinding met de agent en verstuur de request XML. Zet het antwoord als reply.
+        print(reply_xml)
         logger.debug("Reply XML: %s" % reply_xml)
         reply_xml_object = etree.fromstring(reply_xml) # Maak een object waar we dingen mee kunnen doen met lxml.
         data_dict = {} # Variabele waar alle waardes in komen aanmaken.
@@ -69,6 +93,7 @@ class agent:
         root = etree.Element('request')
         info = etree.SubElement(root, "info")
         info_version = etree.SubElement(info, "version", type="server")
+        #TODO Versie uit configuratie halen.
         info_version.text = "0.1"
         info.append(etree.Element("version", type="agent"))
         actions = etree.SubElement(root, "actions")

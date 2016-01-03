@@ -7,5 +7,23 @@
   </logging>
   <actions>
     <allow_reboot>True</allow_reboot>
+    <custom_actions>
+      <action name="test">
+        <description>Test actie.</description>
+        <command>echo "dingen" > test.txt</command>
+      </action>
+      <action name="demo script">
+        <description>Demo script</description>
+        <command>./demo</command>
+      </action>
+      <action name="demo1">
+        <description>demo1 script</description>
+        <command>./demo1</command>
+      </action>
+      <action name="helloworld">
+        <description>Hello World actie.</description>
+        <command>echo "Hello World!" > hey.txt</command>
+      </action>
+    </custom_actions>
   </actions>
 </agentconfig>
