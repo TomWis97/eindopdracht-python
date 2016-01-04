@@ -10,7 +10,6 @@ import sys
 if sys.platform.startswith('linux'):
     import get_data_linux as get_data
 elif sys.platform == 'win32':
-    print("Windows :(")
     import get_data_windows as get_data
 else:
     print("Unsupported platform!")
