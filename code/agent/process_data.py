@@ -10,6 +10,7 @@ import sys
 if sys.platform.startswith('linux'):
     import get_data_linux as get_data
 elif sys.platform == 'win32':
+    print("Windows :(")
     import get_data_windows as get_data
 else:
     print("Unsupported platform!")
@@ -48,19 +49,25 @@ def process_request(file):
                     processing_object[0].text = str(get_data.no_services())
                 elif object == "diskinfo":
                     disks = get_data.diskinfo()
-                    for disk in disks:
-                        disk_element = etree.SubElement(processing_object[0], 'disk', id=disk['drive'])
-                        disk_element_free = etree.SubElement(disk_element, 'free')
-                        disk_element_free.text = disk['free']
-                        disk_element_total = etree.SubElement(disk_element, 'total')
-                        disk_element_total.text = disk['total']
+                    if isinstance(disks, list):
+                        for disk in disks:
+                            disk_element = etree.SubElement(processing_object[0], 'disk', id=disk['drive'])
+                            disk_element_free = etree.SubElement(disk_element, 'free')
+                            disk_element_free.text = str(disk['free'])
+                            disk_element_total = etree.SubElement(disk_element, 'total')
+                            disk_element_total.text = str(disk['total'])
+                    else:
+                        processing_object[0].text = "N/A"
                 elif object == "no_users":
                     processing_object[0].text = str(get_data.no_users())
                 elif object == "ips":
                     alleips = get_data.ips()
-                    for ipaddr in alleips:
-                        ip_element = etree.SubElement(processing_object[0], 'ip')
-                        ip_element.text = ipaddr
+                    if isinstance(alleips, list):
+                        for ipaddr in alleips:
+                            ip_element = etree.SubElement(processing_object[0], 'ip')
+                            ip_element.text = ipaddr
+                    else:
+                        processing_object[0].text = "N/A"
                 elif object == "uptime":
                     processing_object[0].text = str(get_data.uptime())
                 elif object == "cpu_load":
