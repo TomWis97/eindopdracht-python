@@ -1,7 +1,7 @@
 ﻿function temperature
 {
     $a = get-wmiobject MSAcpi_ThermalZoneTemperature -namespace "root/wmi" `
-        | select CurrentTemperature,InstanceName | Select-Object -First 1
+        | select CurrentTemperature,InstanceName
     ($a.CurrentTemperature/10 - 273.15) * 1.8 + 32
 }
 
@@ -23,12 +23,7 @@ function no_services
 
 function diskinfo
 {
-    $disk = Get-WmiObject Win32_LogicalDisk |
-    Select-Object Size,FreeSpace,DeviceID | Where-Object {$_.Size -ne $null}
-
-    $disk.DeviceID
-    $disk.Size
-    $disk.FreeSpace
+    Get-WmiObject Win32_LogicalDisk | Select-Object Size,FreeSpace,DeviceID | Where-Object {$_.Size -ne $null} | ForEach-Object { Write-Host $_.DeviceID $_.Size $_.FreeSpace }
 }
 
 function no_users
