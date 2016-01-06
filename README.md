@@ -4,7 +4,7 @@ Dit is een simpele monitorings-tool. Daarnaast heeft het ook ondersteuning voor 
 #TODO
 ## Wat moet er nog aan gedaan worden?
 - [ ] Webinterface
-  - [ ] Agent toevoegen
+  - [X] Agent toevoegen
   - [ ] Dashboard
   - [ ] Agent
 - [ ] Waar nodig logging en comments toevoegen.
