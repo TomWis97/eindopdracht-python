@@ -1,17 +1,20 @@
 import sqlite3
 import os
 import time
+import config_loader
 
-def add_agent(ip, hostname, mac):
-    conn = sqlite3.connect('database.db')
+db = config_loader.cfg['engine']['database_file']
+
+def add_agent(ip, hostname, os):
+    conn = sqlite3.connect(db)
     c = conn.cursor()
-    data = (ip, hostname, mac)
+    data = (ip, hostname, os)
     c.execute('INSERT INTO agents VALUES (?, ?, ?)', data)
     conn.commit()
     conn.close()
 
 def add_action(ip, name, description):
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect(db)
     c = conn.cursor()
     data = (ip, name, description)
     c.execute('INSERT INTO actions VALUES (?, ?, ?)', data)
@@ -19,7 +22,7 @@ def add_action(ip, name, description):
     conn.close()
 
 def add_data_item(ip, item, value):
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect(db)
     c = conn.cursor()
     timestamp = int(time.time())
     data = (ip, timestamp, item, value)
@@ -28,7 +31,7 @@ def add_data_item(ip, item, value):
     conn.close()
 
 def get_agents():
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect(db)
     c = conn.cursor()
     c.execute('SELECT ip, hostname, mac FROM agents')
     agents = c.fetchall()
@@ -36,7 +39,7 @@ def get_agents():
     return agents
 
 def get_actions(ip):
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect(db)
     c = conn.cursor()
     c.execute('SELECT name, description FROM actions WHERE ip=?', (ip,))
     all_actions = c.fetchall()
@@ -44,7 +47,7 @@ def get_actions(ip):
     return all_actions
 
 def get_last_data(ip, item):
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect(db)
     c = conn.cursor()
     # Bereken de timestamp van 1 dag geleden.
     #timestamp_day_ago = int(time.time()) - (60*60*24) # Huidige tijd in seconden sinds epoch min het aantal seconden in een dag. (60 seconden in een minuut, 60 minuten in een uur, 24 uur in een dag.)
@@ -57,7 +60,7 @@ def get_last_data(ip, item):
     return last_data
 
 def get_all_data():
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect(db)
     c = conn.cursor()
     c.execute('SELECT * FROM data ORDER BY timestamp ASC')
     last_data = c.fetchall()
@@ -66,20 +69,20 @@ def get_all_data():
 
 def setup_database():
     try:
-        os.remove('database.db')
+        os.remove(db)
     except:
         pass
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
-    c.execute('CREATE TABLE agents (`ip` text, `hostname` text, `mac` text, PRIMARY KEY(ip))')
+    c.execute('CREATE TABLE agents (`ip` text, `hostname` text, `os` text, PRIMARY KEY(ip))')
     c.execute('CREATE TABLE actions (`ip` text, `name` text, `description` text)')
     c.execute('CREATE TABLE data (`ip` text, `timestamp` integer, `item` text, `value` integer)')
     conn.commit()
     conn.close()
 
-setup_database()
-add_agent('127.0.0.1', 'localhost1', 'C8:60:00:E2:0F:C7')
-add_agent('172.16.2.24', 'ding', 'C8:60:00:E2:0F:C7')
+#setup_database()
+#add_agent('127.0.0.1', 'localhost1', 'C8:60:00:E2:0F:C7')
+#add_agent('172.16.2.24', 'ding', 'C8:60:00:E2:0F:C7')
 #add_agent('172.16.2.25', 'ding', 'C8:60:00:E2:0F:C7')
 # add_agent('127.0.0.2', 'localhost2', 'C8:60:00:E2:0F:C8')
 # add_agent('127.0.0.3', 'localhost3', 'C8:60:00:E2:0F:C9')
