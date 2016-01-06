@@ -48,6 +48,7 @@ def get_last_data(ip, item):
     c = conn.cursor()
     # Bereken de timestamp van 1 dag geleden.
     #timestamp_day_ago = int(time.time()) - (60*60*24) # Huidige tijd in seconden sinds epoch min het aantal seconden in een dag. (60 seconden in een minuut, 60 minuten in een uur, 24 uur in een dag.)
+    #TODO tijd hier fixen
     timestamp_day_ago = int(time.time()) - 4
     query_where = (ip, item, timestamp_day_ago)
     c.execute('SELECT timestamp, value FROM data WHERE ip=? AND item=? AND timestamp > ? ORDER BY timestamp ASC', (query_where))
@@ -55,8 +56,19 @@ def get_last_data(ip, item):
     conn.close()
     return last_data
 
+def get_all_data():
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute('SELECT * FROM data ORDER BY timestamp ASC')
+    last_data = c.fetchall()
+    conn.close()
+    return last_data
+
 def setup_database():
-    os.remove('database.db')
+    try:
+        os.remove('database.db')
+    except:
+        pass
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
     c.execute('CREATE TABLE agents (`ip` text, `hostname` text, `mac` text, PRIMARY KEY(ip))')
@@ -68,6 +80,7 @@ def setup_database():
 setup_database()
 add_agent('127.0.0.1', 'localhost1', 'C8:60:00:E2:0F:C7')
 add_agent('172.16.2.24', 'ding', 'C8:60:00:E2:0F:C7')
+#add_agent('172.16.2.25', 'ding', 'C8:60:00:E2:0F:C7')
 # add_agent('127.0.0.2', 'localhost2', 'C8:60:00:E2:0F:C8')
 # add_agent('127.0.0.3', 'localhost3', 'C8:60:00:E2:0F:C9')
 # add_action('127.0.0.1', 'dingen', 'Ga dingen doen ofzo.')

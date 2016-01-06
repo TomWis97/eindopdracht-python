@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serverconfig>
+  <logging>
+    <normal>
+      <file>serverlog.txt</file>
+      <level>DEBUG</level>
+      <format>%(asctime)-24s: %(levelname)-10s - %(message)s</format>
+    </normal>
+    <cronscript>
+      <file>cronlog.txt</file>
+      <level>DEBUG</level>
+      <format>%(asctime)-24s: %(levelname)-10s - %(message)s</format>
+    </cronscript>
+  </logging>
+  <engine>
+    <cron_csv_file>history.csv</cron_csv_file>
+    <database_file>database.db</database_file>
+    <graph_length>86400</graph_length>
+  </engine>
+</serverconfig>

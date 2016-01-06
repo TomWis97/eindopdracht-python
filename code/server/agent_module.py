@@ -123,8 +123,5 @@ class agent:
 
 # Voorbeeldje van gebruik van deze class:
 # ding = agent('172.16.2.30')
-# ding.execute_action("ding1", "reboot")
 # ding.request_info()
 # print(ding.data)
-#
-# Uitvoeren van actions:
