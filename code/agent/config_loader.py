@@ -30,6 +30,7 @@ try:
     cfg['log_format'] = root.xpath('/agentconfig/logging/format/text()')[0]
     cfg['actions']['allow_reboot'] = __str_to_boolean(root.xpath('/agentconfig/actions/allow_reboot/text()')[0])
     custom_actions = root.xpath("//agentconfig/actions/custom_actions/action")
+    # Hier komt een lijst met elementen uit:
     for custom_action in custom_actions:
         custom_action_name = custom_action.attrib['name']
         custom_action_command = custom_action.xpath('command')[0].text
@@ -40,7 +41,3 @@ try:
 except:
     # Omdat de logging wordt geconfigureerd nadat de configuratie is geladen, kan hier nog niet direct gelogd worden. Daarom een eventuele error in een variabele zetten.
     load_error = traceback.format_exc()
-
-def getcfg(setting):
-    """Via deze functie kan een instelling worden opgevraagd."""
-    return __cfg.get(setting) # Verwijst naar het __cfg lxml object. Verkrijgt de tekst.
