@@ -5,6 +5,7 @@ import logging
 logger = logging.getLogger('mainlogger')
 
 def __exc_powershell(ps_func):
+	"""Deze functie wordt door alle andere functies aangeroepen."""
 	# Deze functie zou alleen vanuit bestaande code moeten worden aangeroepen. Hoewel dit onveilig als wat is, laten we het maar even zo. :/
 	p=subprocess.Popen(['powershell', '& { . .\Windows.ps1; ' + ps_func + ' }'],
 	stdout=subprocess.PIPE)                  # Zorg ervoor dat je de STDOUT kan opvragen.
@@ -15,6 +16,7 @@ def __exc_powershell(ps_func):
 def temperature():
 	try:
 		pws = __exc_powershell('temperature')
+		# Met een regex zoeken we naar de temperatuur, en niet het kommagetal. Ditzelfde wordt ook gedaan bij andere functies.
 		temp = re.search(r'\d{1,3}', pws)
 		return int(temp.group(0))
 	except:

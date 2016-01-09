@@ -7,7 +7,6 @@ import config_loader
 import process_data
 
 # Logging instellingen instellen enzo.
-#logging.basicConfig(filename=config_loader.getcfg('log_file'), level=config_loader.getcfg('log_level'), format=config_loader.getcfg('log_format'))
 logging.basicConfig(filename=config_loader.cfg['log_file'], level=config_loader.cfg['log_level'], format=config_loader.cfg['log_format'])
 logger = logging.getLogger('mainlogger')
 
@@ -19,10 +18,10 @@ logger.info("Script is gestart.")
 
 try:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Maak een socket object aan.
-    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # Zorg er voor dat we een eventueel bestaand socket kunnen hergebruiken. Dit is nodig in het geval dat het script is gestopt, maar er nog een socket open blijft in het OS.
     s.bind(('', 4568)) # Knoop het socket aan alle interfaces en aan poort 4568.
     s.listen(1) # Laat het socket luisteren naar binnenkomende verbindingen. De 1 geeft aan hoeveel vervindingen er in de wachtrij mogen staan.
-    while True:
+    while True: # Eindeloze loop, zodat er keer op keer verbinding kan worden gemaakt zonder dat het script opnieuw gestart hoeft te worden.
         try:
             conn, addr = s.accept() # Accepteer inkomende verbindingen.
             logger.info('Verbinding met %s via poort %s gemaakt .' % addr)
@@ -38,7 +37,7 @@ try:
             logger.info("Verbinding met %s gesloten." % addr[0])
         except KeyboardInterrupt:
             logger.info("KeyboardInterrupt opgevangen. Script wordt gestopt.") # Op het moment dat het script draait en er CTRL+C gedaan wordt, moet het script stoppen.
-            s.close()
+            s.close() # Socket sluiten
             exit()
         except:
             logger.error(traceback.format_exc())
