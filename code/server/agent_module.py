@@ -3,6 +3,7 @@ import socket
 import struct
 import traceback
 import logging
+import database
 logger = logging.getLogger('mainlogger')
 
 class agent:
@@ -13,9 +14,21 @@ class agent:
     # Lijst met alle mogelijke actions:
     action_ids = ['reboot'] # In de toekomst misschien meer actions!
 
+    #Variabelen van deze module:
+    ip = '' # String met het IP van de agent.
+    data = {} # dictionary met data.
+    info = {} # Dictionary met hostname en os.
+
     def __init__(self,ip):
         # Bij het aanmaken van de class wordt alleen het IP adres van de agent ingesteld. Voor het opvragen van de informatie moet een functie worden aangeroepen. Dit voorkomt dat het aanmaken van de class veel tijd in beslag neemt. (Dit is best een lange comment.)
         self.ip = ip
+        # Statische informatie zoals hostname en OS opvragen.
+        try:
+            info_raw = database.get_agent_info(ip)
+            info = {'hostname': info_raw[0], 'os': info_raw[1]}
+            self.info = info
+        except:
+            pass # Bij het toevoegen van een agent wordt deze class aangeroepen met een niet bestaand IP. Daarom maakt het niet veel uit als de info niet gelezen kan worden.
 
     def discover(self):
         """Discover de agent. Kijk welke custom acties er bekend zijn bij de agent, welk OS, en welke agent versie."""
@@ -121,6 +134,13 @@ class agent:
             actions_result[action.attrib['id']] = action.text # Alle andere obnjecten hebben geen speciale behandeling nodig. Die kunnen dus gewoon worden toegevoegd aan de ditctionary.
         self.actions_result = actions_result # Sla het resultaat van de actions op in een dictionary in het object.
 
+    def get_last_data(self):
+        """Haal de laatste gegevens uit de database en zet die in de data variabele."""
+        data = database.get_last_data(self.ip)
+        alldata = {}
+        for item in data:
+            alldata[item[0]] = item[1]
+        self.data = alldata
 # Voorbeeldje van gebruik van deze class:
 # ding = agent('172.16.2.30')
 # ding.request_info()

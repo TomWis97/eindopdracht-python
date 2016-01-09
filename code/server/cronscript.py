@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import csv
 import database
 import agent_module
@@ -35,6 +36,8 @@ for agent_query in agents_to_query:
         logger.warning("Data kon niet worden verkregen van %s." % agent_query.ip)
         agents_to_query.remove(agent_query)
 
+current_time = int(time.time())
+
 try:
     f = open(config_loader.cfg['engine']['cron_csv_file'], 'at') # File openen voor toevoegen in text mode.
     writer = csv.writer(f)
@@ -44,7 +47,7 @@ try:
             if dataitem in data_to_log:
                 if agent_info.data[dataitem] != 'N/A':
                     # Naar database
-                    database.add_data_item(agent_info.ip, dataitem, agent_info.data[dataitem])
+                    database.add_data_item(agent_info.ip, dataitem, agent_info.data[dataitem], current_time)
                     # Naar CSV
                     writer.writerow((int(time.time()), agent_info.ip, dataitem, agent_info.data[dataitem]))
 except:

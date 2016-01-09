@@ -6,7 +6,7 @@ def create_html(maincontent):
     status = """Status: 200 OK
 Content-Type: text/html
 
-    """
+"""
     header = """<!DOCTYPE html>
 <html>
 	<head>

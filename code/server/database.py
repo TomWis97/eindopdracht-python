@@ -1,6 +1,5 @@
 import sqlite3
 import os
-import time
 import config_loader
 
 db = config_loader.cfg['engine']['database_file']
@@ -21,10 +20,10 @@ def add_action(ip, name, description):
     conn.commit()
     conn.close()
 
-def add_data_item(ip, item, value):
+def add_data_item(ip, item, value, timestamp):
     conn = sqlite3.connect(db)
     c = conn.cursor()
-    timestamp = int(time.time())
+    timestamp = int(timestamp)
     data = (ip, timestamp, item, value)
     c.execute('INSERT INTO data VALUES (?, ?, ?, ?)', data)
     conn.commit()
@@ -33,10 +32,18 @@ def add_data_item(ip, item, value):
 def get_agents():
     conn = sqlite3.connect(db)
     c = conn.cursor()
-    c.execute('SELECT ip, hostname, mac FROM agents')
+    c.execute('SELECT ip, hostname, os FROM agents')
     agents = c.fetchall()
     conn.close()
     return agents
+
+def get_agent_info(ip):
+    conn = sqlite3.connect(db)
+    c = conn.cursor()
+    c.execute('SELECT hostname, os FROM agents WHERE ip=?', (ip,))
+    agent_info = c.fetchone()
+    conn.close()
+    return agent_info
 
 def get_actions(ip):
     conn = sqlite3.connect(db)
@@ -46,7 +53,8 @@ def get_actions(ip):
     conn.close()
     return all_actions
 
-def get_last_data(ip, item):
+def get_history(ip, item):
+    """Verkrijgt de laatste data over een periode."""
     conn = sqlite3.connect(db)
     c = conn.cursor()
     # Bereken de timestamp van 1 dag geleden.
@@ -55,6 +63,15 @@ def get_last_data(ip, item):
     timestamp_day_ago = int(time.time()) - 4
     query_where = (ip, item, timestamp_day_ago)
     c.execute('SELECT timestamp, value FROM data WHERE ip=? AND item=? AND timestamp > ? ORDER BY timestamp ASC', (query_where))
+    history_data = c.fetchall()
+    conn.close()
+    return history_data
+
+def get_last_data(ip):
+    """Verkrijgt de laatste data van een agent."""
+    conn = sqlite3.connect(db)
+    c = conn.cursor()
+    c.execute('SELECT item, value FROM data WHERE ip = ? AND timestamp = (SELECT MAX(timestamp) FROM data WHERE ip = ?)', (ip,ip))
     last_data = c.fetchall()
     conn.close()
     return last_data
