@@ -9,7 +9,10 @@ def execute_action(input_action):
     logger.info("Actie wordt uitgevoerd: %s" % input_action)
     if input_action == 'reboot':
         if config_loader.cfg['actions']['allow_reboot'] == True:
-            print("Rebooting!11")
+            try:
+                subprocess.check_call('sudo reboot', shell=True, stderr=subprocess.STDOUT)
+            except:
+                return "Error"
             logger.info("Reboot actie uitgevoerd.")
             return "Success"
         else:
