@@ -17,6 +17,7 @@ Installatie van de agent onder Linux.
 	2	Installeer lxml:
 		2a	Als root: pip3 install lxml
 	3	Zorg er voor dat het script "agent.py" wordt uitgevoerd.
+	4	Voor acties als reboot is sudo toegang nodig.
 	
 Installatie van de server software.
 	Notitie: Ook hier wordt van Debian Jessie uit gegaan.
@@ -27,6 +28,7 @@ Installatie van de server software.
 			<Directory /var/www/html>
 				Options +ExecCGI
 				AddHandler cgi-script .py
+				DirectoryIndex web_dashboard.py
 			</Directory>
 		2c Sla het bestand op en herstart de webserver met 'service apache2 restart'
 	3	Maak de .py bestanden uitvoerbaar met chmod +x, zorg er ook voor dat de owner van de bestanden www-data is.
