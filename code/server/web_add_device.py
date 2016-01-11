@@ -13,7 +13,7 @@ form = cgi.FieldStorage()
 logging.basicConfig(filename=config_loader.cfg['logging_normal']['file'], level=config_loader.cfg['logging_normal']['level'], format=config_loader.cfg['logging_normal']['format'])
 logger = logging.getLogger('mainlogger')
 
-content = """<form action="web_add_device.py" method="post">
+content = """<h1>Apparaat toevoegen</h1><form action="web_add_device.py" method="post">
 <input type="text" name="newip" placeholder="DNS/IP">
 <input type="submit" value="Voeg toe.">
 </form>"""

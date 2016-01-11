@@ -10,7 +10,7 @@ for agent_record in database.get_agents():
     agent_list[-1].get_last_data()
 
 # Nu kunnen we de tabel gaan bakken.
-table = '<table id="dashboard_table"><tr><th>Hostname</th><th>RAM</th><th>CPU</th><th>Users</th><th>Procs</th><th>serv</th></tr>'
+table = '<h1>Dashboard</h1><table id="dashboard_table"><tr><th>Hostname</th><th>RAM</th><th>CPU</th><th>Users</th><th>Procs</th><th>serv</th></tr>'
 for agent in agent_list:
     # We maken even een list met alle data. Dit maakt het maken van de tabel wat makkelijker.
     # TODO Icoontje voor Windows of Linux.

@@ -101,7 +101,8 @@ for custom_action in database.get_actions(current_agent.ip):
     #actions_div = actions_div + str(custom_action)
 actions_div = actions_div + '</ul></div>'
 
-all_content = executed_action_div + actions_div + cpu_ram_table + data_table + disk_table + graphs
+page_title = '<h1>%s</h1>' % current_agent.info['hostname']
+all_content = page_title + executed_action_div + actions_div + cpu_ram_table + data_table + disk_table + graphs
 print(helper_web.create_html(all_content))
 # if database.get_agent_info(arguments['id'].value) != None:
 #     print("Legit.")
