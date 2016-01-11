@@ -1,0 +1,32 @@
+Installatie van de agent op Windows.
+	1	Pak de zip van de agent uit naar C:\agent
+	2	Installeer de service.
+		2a	Start een commandprompt in C:\agent
+		2b	Commando: nssm install monitoragent
+		2c	In het venster dat nu is geopend:
+				Path: C:\agent\agent.exe
+		2d	Klik op "Install service"
+	3	Sta toe dat powershell scripts mogen worden uitgevoerd.
+		3a	Start een 32-bits Powershell sessie.
+		3b 	Commando: Set-ExecutionPolicy Unrestricted
+	4	Als er geen verbinding kan worden gemaakt met de agent, moet mogelijk de agent worden toegestaan in de firewall. De gebruikte TCP poort is 4568.
+	
+Installatie van de agent onder Linux.
+	Notitie: Omdat er veel verschil zit tussen verschillende Linux distributies, wordt er nu uitgegaan van Debian Jessie.
+	1	Pak de bestanden van het script uit.
+	2	Installeer lxml:
+		2a	Als root: pip3 install lxml
+	3	Zorg er voor dat het script "agent.py" wordt uitgevoerd.
+	
+Installatie van de server software.
+	Notitie: Ook hier wordt van Debian Jessie uit gegaan.
+	1	Installeer Apache2
+	2	Configureer Apache2 zo dat Python scripts kunnen worden uitgevoerd via CGI:
+		2a	Open het bestand /etc/apache2/sites-available/000-default.conf
+		2b	Voeg boven </VirtualHost> het volgende toe:
+			<Directory /var/www/html>
+				Options +ExecCGI
+				AddHandler cgi-script .py
+			</Directory>
+		2c Sla het bestand op en herstart de webserver met 'service apache2 restart'
+	3	Maak de .py bestanden uitvoerbaar met chmod +x, zorg er ook voor dat de owner van de bestanden www-data is.
