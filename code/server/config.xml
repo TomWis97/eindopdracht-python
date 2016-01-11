@@ -15,6 +15,6 @@
   <engine>
     <cron_csv_file>history.csv</cron_csv_file>
     <database_file>database.db</database_file>
-    <graph_length>86400</graph_length>
+    <graph_length>600</graph_length>
   </engine>
 </serverconfig>

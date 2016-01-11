@@ -66,9 +66,13 @@ def get_history(ip, item):
     c = conn.cursor()
     # Bereken de timestamp van 1 dag geleden.
     #timestamp_day_ago = int(time.time()) - (60*60*24) # Huidige tijd in seconden sinds epoch min het aantal seconden in een dag. (60 seconden in een minuut, 60 minuten in een uur, 24 uur in een dag.)
-    #TODO tijd hier fixen
-    timestamp_day_ago = int(time.time()) - 60
-    query_where = (ip, item, timestamp_day_ago)
+    try:
+        conftime = int(config_loader.cfg['engine']['graph_length'])
+    except:
+        # Fallback in het geval dat hier for some reason iets mis gaat.
+        conftime = 600
+    timestamp_hist = int(time.time()) - conftime
+    query_where = (ip, item, timestamp_hist)
     c.execute('SELECT timestamp, value FROM data WHERE ip=? AND item=? AND timestamp > ? ORDER BY timestamp ASC', (query_where))
     history_data = c.fetchall()
     conn.close()
