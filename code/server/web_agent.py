@@ -10,7 +10,7 @@ import traceback # Vppr depudding
 import logging
 import config_loader
 
-logging.basicConfig(filename=config_loader.cfg['logging_cron']['file'], level=config_loader.cfg['logging_cron']['level'], format=config_loader.cfg['logging_cron']['format'])
+logging.basicConfig(filename=config_loader.cfg['logging_normal']['file'], level=config_loader.cfg['logging_normal']['level'], format=config_loader.cfg['logging_normal']['format'])
 logger = logging.getLogger('mainlogger')
 if config_loader.load_error:
     # Mocht er iets fout zijn gegaan bij het laden van de configuratie, dan wordt deze code uitgevoerd.
