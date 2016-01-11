@@ -17,7 +17,7 @@ Content-Type: text/html
 	</head>
 	<body>
 		<header>
-			<h1>Dashboard.</h1>
+			<h1>MonTool.</h1>
             <a href="web_dashboard.py">Dashboard</a><a href="web_add_device.py">Apparaat toevoegen.</a>
 		</header>
 		<main>"""
