@@ -1,6 +1,7 @@
 import sqlite3
 import os
 import config_loader
+import time
 
 db = config_loader.cfg['engine']['database_file']
 
@@ -60,7 +61,7 @@ def get_history(ip, item):
     # Bereken de timestamp van 1 dag geleden.
     #timestamp_day_ago = int(time.time()) - (60*60*24) # Huidige tijd in seconden sinds epoch min het aantal seconden in een dag. (60 seconden in een minuut, 60 minuten in een uur, 24 uur in een dag.)
     #TODO tijd hier fixen
-    timestamp_day_ago = int(time.time()) - 4
+    timestamp_day_ago = int(time.time()) - 60
     query_where = (ip, item, timestamp_day_ago)
     c.execute('SELECT timestamp, value FROM data WHERE ip=? AND item=? AND timestamp > ? ORDER BY timestamp ASC', (query_where))
     history_data = c.fetchall()
@@ -75,6 +76,15 @@ def get_last_data(ip):
     last_data = c.fetchall()
     conn.close()
     return last_data
+
+def get_avg_data(ip, item):
+    """Het gemiddelde van een item van een agent."""
+    conn = sqlite3.connect(db)
+    c = conn.cursor()
+    c.execute('SELECT AVG(value) FROM data WHERE ip = ? AND item = ?', (ip,item))
+    last_data = c.fetchall()
+    conn.close()
+    return last_data[0][0]
 
 def get_all_data():
     conn = sqlite3.connect(db)

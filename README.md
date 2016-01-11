@@ -5,8 +5,9 @@ Dit is een simpele monitorings-tool. Daarnaast heeft het ook ondersteuning voor 
 ## Wat moet er nog aan gedaan worden?
 - [ ] Webinterface
   - [X] Agent toevoegen
-  - [ ] Dashboard
-  - [ ] Agent
+  - [X] Dashboard
+  - [X] Agent
+- [ ] CSS fixen.
 - [ ] Waar nodig logging en comments toevoegen.
 
 ## Wat zou nog leuk zijn om te hebben?
