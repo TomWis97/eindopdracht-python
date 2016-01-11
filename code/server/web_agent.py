@@ -8,6 +8,8 @@ import socket # Nodig voor het afhandelen van de timeout.
 import graph
 import traceback # Vppr depudding
 import logging
+import config_loader
+
 logging.basicConfig(filename=config_loader.cfg['logging_cron']['file'], level=config_loader.cfg['logging_cron']['level'], format=config_loader.cfg['logging_cron']['format'])
 logger = logging.getLogger('mainlogger')
 if config_loader.load_error:

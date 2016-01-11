@@ -3,6 +3,7 @@ import agent_module
 import database
 import helper_web
 import logging
+import config_loader
 logging.basicConfig(filename=config_loader.cfg['logging_cron']['file'], level=config_loader.cfg['logging_cron']['level'], format=config_loader.cfg['logging_cron']['format'])
 logger = logging.getLogger('mainlogger')
 if config_loader.load_error:
