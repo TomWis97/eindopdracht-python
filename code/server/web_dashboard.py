@@ -2,6 +2,12 @@
 import agent_module
 import database
 import helper_web
+import logging
+logging.basicConfig(filename=config_loader.cfg['logging_cron']['file'], level=config_loader.cfg['logging_cron']['level'], format=config_loader.cfg['logging_cron']['format'])
+logger = logging.getLogger('mainlogger')
+if config_loader.load_error:
+    # Mocht er iets fout zijn gegaan bij het laden van de configuratie, dan wordt deze code uitgevoerd.
+    logger.error(config_loader.load_error)
 
 agent_list = []
 for agent_record in database.get_agents():
@@ -42,6 +48,7 @@ for agent in agent_list:
     except:
         current_agent_data.append('?')
 
+    # Yay voor javascript om klikken op een rij werkend te maken.
     agent_row = '''<tr onclick="document.location = 'web_agent.py?id=%s';">''' % agent.ip
     for td in current_agent_data:
         agent_row = agent_row + '<td>' + td + '</td>'
@@ -49,3 +56,4 @@ for agent in agent_list:
     table = table + agent_row
 table = table + '</table>'
 print(helper_web.create_html(table))
+logger.info('Pagina dashboard is klaar.')

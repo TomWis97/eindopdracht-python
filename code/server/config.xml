@@ -8,7 +8,7 @@
     </normal>
     <cronscript>
       <file>cronlog.txt</file>
-      <level>DEBUG</level>
+      <level>INFO</level>
       <format>%(asctime)-24s: %(levelname)-10s - %(message)s</format>
     </cronscript>
   </logging>

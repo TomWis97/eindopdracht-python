@@ -6,14 +6,16 @@ import time
 db = config_loader.cfg['engine']['database_file']
 
 def add_agent(ip, hostname, os):
-    conn = sqlite3.connect(db)
-    c = conn.cursor()
+    """Host toevoegen aan de database."""
+    conn = sqlite3.connect(db) # Verbinding maken met de database (aka. file openen).
+    c = conn.cursor() # Met de cursor kunnen queries worden uitgevoerd.
     data = (ip, hostname, os)
-    c.execute('INSERT INTO agents VALUES (?, ?, ?)', data)
-    conn.commit()
-    conn.close()
+    c.execute('INSERT INTO agents VALUES (?, ?, ?)', data) # SQL injection voorkomen.
+    conn.commit() # Nieuw record wegschrijven naar de database.
+    conn.close() # Database weer sluiten.
 
 def add_action(ip, name, description):
+    """Actie toevoegen aan de database."""
     conn = sqlite3.connect(db)
     c = conn.cursor()
     data = (ip, name, description)
@@ -22,6 +24,7 @@ def add_action(ip, name, description):
     conn.close()
 
 def add_data_item(ip, item, value, timestamp):
+    """Data item toevoegen aan de database."""
     conn = sqlite3.connect(db)
     c = conn.cursor()
     timestamp = int(timestamp)
@@ -31,6 +34,7 @@ def add_data_item(ip, item, value, timestamp):
     conn.close()
 
 def get_agents():
+    """Lijst terug geven met alle agents."""
     conn = sqlite3.connect(db)
     c = conn.cursor()
     c.execute('SELECT ip, hostname, os FROM agents')
@@ -39,6 +43,7 @@ def get_agents():
     return agents
 
 def get_agent_info(ip):
+    """Informatie zoals de hostname terug geven van een agent."""
     conn = sqlite3.connect(db)
     c = conn.cursor()
     c.execute('SELECT hostname, os FROM agents WHERE ip=?', (ip,))
@@ -47,6 +52,7 @@ def get_agent_info(ip):
     return agent_info
 
 def get_actions(ip):
+    """Alle acties van een agent opvragen."""
     conn = sqlite3.connect(db)
     c = conn.cursor()
     c.execute('SELECT name, description FROM actions WHERE ip=?', (ip,))
@@ -87,6 +93,7 @@ def get_avg_data(ip, item):
     return last_data[0][0]
 
 def get_all_data():
+    """Alle data opvragen van een agent."""
     conn = sqlite3.connect(db)
     c = conn.cursor()
     c.execute('SELECT * FROM data ORDER BY timestamp ASC')
@@ -95,6 +102,7 @@ def get_all_data():
     return last_data
 
 def setup_database():
+    """Database aanmaken. Dit verwijdert natuurlijk alle data die er in staat."""
     try:
         os.remove(db)
     except:
@@ -106,31 +114,3 @@ def setup_database():
     c.execute('CREATE TABLE data (`ip` text, `timestamp` integer, `item` text, `value` integer)')
     conn.commit()
     conn.close()
-
-#setup_database()
-#add_agent('127.0.0.1', 'localhost1', 'C8:60:00:E2:0F:C7')
-#add_agent('172.16.2.24', 'ding', 'C8:60:00:E2:0F:C7')
-#add_agent('172.16.2.25', 'ding', 'C8:60:00:E2:0F:C7')
-# add_agent('127.0.0.2', 'localhost2', 'C8:60:00:E2:0F:C8')
-# add_agent('127.0.0.3', 'localhost3', 'C8:60:00:E2:0F:C9')
-# add_action('127.0.0.1', 'dingen', 'Ga dingen doen ofzo.')
-# add_action('127.0.0.1', 'dingen32', 'Ja')
-# add_data_item('127.0.0.1', 'geval', 45)
-# time.sleep(2)
-# add_data_item('127.0.0.1', 'geval', 44)
-# time.sleep(2)
-# add_data_item('127.0.0.1', 'geval', 46)
-# time.sleep(2)
-# add_data_item('127.0.0.1', 'geval', 42)
-# time.sleep(2)
-# add_data_item('127.0.0.1', 'geval', 49)
-# time.sleep(2)
-# add_data_item('127.0.0.1', 'geval', 40)
-# add_data_item('127.0.0.1', 'geval1', 3425)
-# add_data_item('127.0.0.2', 'geval', 45)
-
-# print(get_agents())
-# print(get_actions('127.0.0.1'))
-# getdingen = get_last_data('127.0.0.1', 'geval')
-# for dingen in getdingen:
-#     print('Datum:', time.localtime(dingen[0]), "Waarde:", dingen[1])

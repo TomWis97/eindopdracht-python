@@ -7,11 +7,17 @@ import cgitb
 import logging
 import config_loader
 import traceback
+# Fancy crashes (if any)
 cgitb.enable()
 form = cgi.FieldStorage()
 
 logging.basicConfig(filename=config_loader.cfg['logging_normal']['file'], level=config_loader.cfg['logging_normal']['level'], format=config_loader.cfg['logging_normal']['format'])
 logger = logging.getLogger('mainlogger')
+if config_loader.load_error:
+    # Mocht er iets fout zijn gegaan bij het laden van de configuratie, dan wordt deze code uitgevoerd.
+    logger.error(config_loader.load_error)
+
+logger.info('Pagina: Add Device')
 
 content = """<h1>Apparaat toevoegen</h1><form action="web_add_device.py" method="post">
 <input type="text" name="newip" placeholder="DNS/IP">
@@ -19,7 +25,9 @@ content = """<h1>Apparaat toevoegen</h1><form action="web_add_device.py" method=
 </form>"""
 
 try:
+    # POST uitlezen.
     newip = form.getvalue('newip')
+    logger.info('Add Device: IP aangevraagd:' + newip)
     content = content + "<p>Ingevoerd: " + newip + "<p>"
     try:
         agent_to_discover = agent_module.agent(newip)
@@ -29,6 +37,7 @@ try:
 <tr><th>Versie</th><td>%s</td></tr></table>''' % (new_data['hostname'], new_data['os'], new_data['version'])
         #TODO Checken of agent niet al in database staat.
         database.add_agent(newip, new_data['hostname'], new_data['os']) # Agent toevoegen aan de database.
+        logger.warning('Agent wordt tegevoegd aan database: ip=%s, hostname=%s, os=%s' % (newip, new_data['hostname'], new_data['os']))
         custom_actions_table = "<h2>Acties:</h2><table><tr><th>Naam</th><th>Beschrijving</th></tr>"
         if len(new_data['custom_actions']['names_list']) > 0:
             for custom_action in new_data['custom_actions']['names_list']:
@@ -40,10 +49,11 @@ try:
             custom_actions_table = "<p>Er zijn geen acties gevonden op deze agent.</p>"
         content = content + agent_info_table + custom_actions_table
     except:
-        logger.warning("Tijdens het discover proces is het volgende fout gegaan: %s" % traceback.format_exc())
+        logger.error("Tijdens het discover proces is het volgende fout gegaan: %s" % traceback.format_exc())
         error = '<span class="warning"><h1>Er ging iets fout:</h1><p>%s</p>' % traceback.format_exc().splitlines()[-1]
         content = content + error
 except:
     content = content + '<p>Voer een IP adres of DNS naam in.</p>'
 
 print(helper_web.create_html(content))
+logger.info('Pagina apparaat toevoegen is klaar.')

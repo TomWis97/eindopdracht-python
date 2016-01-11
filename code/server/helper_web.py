@@ -2,7 +2,8 @@ import logging
 logger = logging.getLogger('mainlogger')
 
 def create_html(maincontent):
-    """Krijgt de content van de pagina binnen en hangt er een header en footer omheen."""
+    """Krijgt de content van de pagina binnen als een string en hangt er een header en footer omheen."""
+    logger.debug('create_html gaat een pagina bakken met deze input:' + maincontent)
     status = """Status: 200 OK
 Content-Type: text/html
 
