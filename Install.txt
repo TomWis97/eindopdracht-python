@@ -21,7 +21,7 @@ Installatie van de agent onder Linux.
 	
 Installatie van de server software.
 	Notitie: Ook hier wordt van Debian Jessie uit gegaan.
-	1	Installeer Apache2
+	1	Installeer de benodigde packages met apt-get: apache2 python3 python3-matplotlib python3-lxml.
 	2	Configureer Apache2 zo dat Python scripts kunnen worden uitgevoerd via CGI:
 		2a	Open het bestand /etc/apache2/sites-available/000-default.conf
 		2b	Voeg boven </VirtualHost> het volgende toe:
