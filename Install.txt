@@ -14,8 +14,7 @@ Installatie van de agent op Windows.
 Installatie van de agent onder Linux.
 	Notitie: Omdat er veel verschil zit tussen verschillende Linux distributies, wordt er nu uitgegaan van Debian Jessie.
 	1	Pak de bestanden van het script uit.
-	2	Installeer lxml:
-		2a	Als root: pip3 install lxml
+	2	Installeer de benodigde packages met apt-get: python3 python3-lxml
 	3	Zorg er voor dat het script "agent.py" wordt uitgevoerd.
 	4	Voor acties als reboot is sudo toegang nodig.
 	
@@ -33,6 +32,4 @@ Installatie van de server software.
 		2c Sla het bestand op en herstart de webserver met 'service apache2 restart'
 	3	Maak de .py bestanden uitvoerbaar met chmod +x, zorg er ook voor dat de owner van de bestanden www-data is.
 	4	Voeg aan crontab een regel toe die iedere 5 minuten het script "cronscript.py" aan roept.
-	5	Installeer met pip3 install de volgende dependencies:
-		5a	lxml
-		5b	matplotlib
+
