@@ -32,4 +32,5 @@ Installatie van de server software.
 		2c Sla het bestand op en herstart de webserver met 'service apache2 restart'
 	3	Maak de .py bestanden uitvoerbaar met chmod +x, zorg er ook voor dat de owner van de bestanden www-data is.
 	4	Voeg aan crontab een regel toe die iedere 5 minuten het script "cronscript.py" aan roept.
+	5      Zorg er voor dat Apache2 CGI mag doen met het commando "a2enmod cgid".
 
